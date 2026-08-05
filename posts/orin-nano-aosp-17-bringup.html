@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOSP 17 Bringup on NVIDIA Jetson Orin Nano | EdgeStack Systems</title>
+    <style>
+        :root {
+            --bg-color: #fbfbfd;
+            --text-primary: #1d1d1f;
+            --text-secondary: #515154;
+            --accent-color: #0066cc;
+            --card-bg: #ffffff;
+            --border-color: #d2d2d7;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .back-link { color: var(--accent-color); text-decoration: none; font-size: 0.95rem; display: inline-block; margin-bottom: 24px; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { font-size: 2.2rem; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 8px; }
+        .meta { color: #86868b; font-size: 0.9rem; margin-bottom: 36px; }
+        h2 { font-size: 1.4rem; font-weight: 600; margin-top: 40px; margin-bottom: 12px; }
+        p { color: var(--text-secondary); margin-bottom: 16px; font-size: 1.05rem; }
+        pre { background: #f5f5f7; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.9rem; color: #1d1d1f; }
+        footer { margin-top: 64px; font-size: 0.85rem; color: #86868b; border-top: 1px solid var(--border-color); padding-top: 24px; text-align: center; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">&larr; Back to EdgeStack Systems</a>
+    
+    <h1>Bringing Up AOSP 17 on NVIDIA Jetson Orin Nano</h1>
+    <div class="meta">Published: August 2026 &bull; Architecture &amp; System Integration</div>
+
+    <p>Targeting newer Android Open Source Project releases on edge AI hardware platforms like the Jetson Orin Nano requires carefully bridging kernel configurations, device tree blobs (DTB), and custom hardware abstraction layers (HALs).</p>
+
+    <h2>1. Bootloader &amp; Kernel Prerequisites</h2>
+    <p>The initial hurdle involves configuring the Tegra boot chain to pass standard Android boot parameters while initializing the display and PCIe controllers correctly under a modern mainline-derived Linux kernel base.</p>
+    <pre><code># Verifying kernel configuration flags for binder and ashmem/memfd
+CONFIG_ANDROID_BINDER_IPC=y
+CONFIG_ANDROID_BINDERFS=y
+CONFIG_ASHMEM=y</code></pre>
+
+    <h2>2. Hardware Abstraction Layer (HAL) Adaptation</h2>
+    <p>With AOSP 17, strict requirements on Treble modularization mean that legacy camera and power management drivers must expose proper AIDL interfaces rather than legacy HIDL bindings.</p>
+
+    <footer>
+        &copy; 2026 EdgeStack Systems. All rights reserved.
+    </footer>
+</body>
+</html>

@@ -13,9 +13,8 @@
             --card-bg: #ffffff;
             --border-color: #d2d2d7;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             max-width: 680px;
@@ -24,73 +23,19 @@
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
-
-        header {
-            margin-bottom: 48px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            letter-spacing: -0.015em;
-            color: var(--text-primary);
-            margin: 0 0 12px 0;
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: var(--text-secondary);
-            letter-spacing: -0.005em;
-            line-height: 1.4;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-            margin-bottom: 24px;
-        }
-
-        h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0 0 12px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        p {
-            margin: 0 0 16px 0;
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        p:last-child {
-            margin-bottom: 0;
-        }
-
-        .email-box {
-            display: inline-block;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            background-color: #f5f5f7;
-            padding: 8px 14px;
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            border: 1px solid #e8e8ed;
-            margin-top: 8px;
-        }
-
-        footer {
-            margin-top: 64px;
-            font-size: 0.85rem;
-            color: #86868b;
-            text-align: center;
-        }
+        header { margin-bottom: 48px; }
+        h1 { font-size: 2.5rem; font-weight: 600; letter-spacing: -0.015em; color: var(--text-primary); margin: 0 0 12px 0; }
+        .subtitle { font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); letter-spacing: -0.005em; line-height: 1.4; }
+        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); margin-bottom: 24px; }
+        h2 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin: 0 0 16px 0; text-transform: uppercase; letter-spacing: 0.05em; }
+        p { margin: 0 0 16px 0; color: var(--text-secondary); font-size: 1.05rem; }
+        p:last-child { margin-bottom: 0; }
+        ul { margin: 0; padding-left: 20px; color: var(--text-secondary); }
+        li { margin-bottom: 10px; font-size: 1.05rem; }
+        a.post-link { color: var(--accent-color); text-decoration: none; font-weight: 500; }
+        a.post-link:hover { text-decoration: underline; }
+        .email-box { display: inline-block; font-family: ui-monospace, monospace; background-color: #f5f5f7; padding: 8px 14px; border-radius: 6px; color: var(--text-primary); font-size: 0.95rem; border: 1px solid #e8e8ed; margin-top: 8px; }
+        footer { margin-top: 64px; font-size: 0.85rem; color: #86868b; text-align: center; }
     </style>
 </head>
 <body>
@@ -101,19 +46,29 @@
     </header>
 
     <div class="card">
-        <h2>Commercial Engagements</h2>
-        <p>Providing expert architectural design, board-support package optimization, virtualization debugging, and secure system-level integration for high-performance silicon targets.</p>
+        <h2>Core Capabilities</h2>
+        <ul>
+            <li>Full Board Support Package (BSP) custom kernel bringup.</li>
+            <li>AOSP architecture, customization, and hardware abstraction layer (HAL) development.</li>
+            <li>Low-level virtualization, hypervisor configuration, and secure container runtimes on ARM64.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Engineering Notes &amp; Publications</h2>
+        <p><a href="posts/orin-nano-aosp-17-bringup.html" class="post-link">Bringing Up AOSP 17 on NVIDIA Jetson Orin Nano &rarr;</a></p>
+        <p style="font-size: 0.95rem; color: #86868b; margin-top: 8px;">More deep-dives on virtualization and system architecture coming soon.</p>
     </div>
 
     <div class="card">
         <h2>Inquiries</h2>
-        <p>For technical evaluations, contract scoping, or architecture reviews, reach out directly via secure channels:</p>
+        <p>For technical evaluations, architecture design reviews, or custom integration contracts, reach out directly:</p>
         <div class="email-box">edgestack-dev [at] proton.me</div>
     </div>
 
     <footer>
         &copy; 2026 EdgeStack Systems. All rights reserved.
-    </div>
+    </footer>
 
 </body>
 </html>
