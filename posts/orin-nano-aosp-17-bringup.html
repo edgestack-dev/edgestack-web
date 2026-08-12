@@ -29,7 +29,14 @@
         .meta { color: #86868b; font-size: 0.9rem; margin-bottom: 36px; }
         h2 { font-size: 1.4rem; font-weight: 600; margin-top: 40px; margin-bottom: 12px; }
         p { color: var(--text-secondary); margin-bottom: 16px; font-size: 1.05rem; }
-        pre { background: #f5f5f7; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.9rem; color: #1d1d1f; }
+        pre { background: #f5f5f7; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.9rem; color: #1d1d1f; margin-bottom: 24px; }
+        code { font-family: ui-monospace, monospace; }
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95rem; }
+        th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+        th { font-weight: 600; color: var(--text-primary); background: #f5f5f7; }
+        td { color: var(--text-secondary); }
+        ul { margin-bottom: 16px; padding-left: 20px; color: var(--text-secondary); font-size: 1.05rem; }
+        li { margin-bottom: 8px; }
         footer { margin-top: 64px; font-size: 0.85rem; color: #86868b; border-top: 1px solid var(--border-color); padding-top: 24px; text-align: center; }
     </style>
 </head>
@@ -39,17 +46,124 @@
     <h1>Bringing Up AOSP 17 on NVIDIA Jetson Orin Nano</h1>
     <div class="meta">Published: August 2026 &bull; Architecture &amp; System Integration</div>
 
-    <p>Targeting newer Android Open Source Project releases on edge AI hardware platforms like the Jetson Orin Nano requires carefully bridging kernel configurations, device tree blobs (DTB), and custom hardware abstraction layers (HALs).</p>
+    <p>Targeting newer Android Open Source Project releases on edge AI hardware platforms like the Jetson Orin Nano requires carefully bridging kernel configurations, device tree blobs (DTB), and custom hardware abstraction layers (HALs) via crosvm and KVM virtualization.</p>
 
-    <h2>1. Bootloader &amp; Kernel Prerequisites</h2>
-    <p>The initial hurdle involves configuring the Tegra boot chain to pass standard Android boot parameters while initializing the display and PCIe controllers correctly under a modern mainline-derived Linux kernel base.</p>
-    <pre><code># Verifying kernel configuration flags for binder and ashmem/memfd
-CONFIG_ANDROID_BINDER_IPC=y
-CONFIG_ANDROID_BINDERFS=y
-CONFIG_ASHMEM=y</code></pre>
+    <h2>1. Host Differences (Orin vs. RPi5)</h2>
+    <p>Running Cuttlefish targets on embedded ARM64 hosts presents unique platform constraints compared to standard reference boards like the Raspberry Pi 5:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Aspect</th>
+                <th>Raspberry Pi 5</th>
+                <th>NVIDIA Orin Nano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>OS / Environment</strong></td>
+                <td>Debian Bookworm / Ubuntu 24.04</td>
+                <td>L4T Ubuntu 22.04 (JetPack)</td>
+            </tr>
+            <tr>
+                <td><strong>Kernel Base</strong></td>
+                <td>6.x mainline</td>
+                <td>5.15.148-tegra</td>
+            </tr>
+            <tr>
+                <td><strong>RAM Allocation</strong></td>
+                <td>4GB total (1GB assigned to VM)</td>
+                <td>8GB total (2GB assigned to VM)</td>
+            </tr>
+            <tr>
+                <td><strong>vhost_vsock</strong></td>
+                <td>Available via standard modprobe</td>
+                <td>Requires manual build from L4T kernel source</td>
+            </tr>
+            <tr>
+                <td><strong>virglrenderer</strong></td>
+                <td>System package (&gt;=1.0)</td>
+                <td>Must build from source (L4T ships legacy 0.9.1)</td>
+            </tr>
+        </tbody>
+    </table>
 
-    <h2>2. Hardware Abstraction Layer (HAL) Adaptation</h2>
-    <p>With AOSP 17, strict requirements on Treble modularization mean that legacy camera and power management drivers must expose proper AIDL interfaces rather than legacy HIDL bindings.</p>
+    <h2>2. Additional Build Dependencies</h2>
+    <p>Ensure the host has the required toolchains and graphics development packages installed:</p>
+    <pre><code>sudo apt install -y \
+    clang \
+    libclang-dev \
+    libepoxy-dev \
+    meson \
+    ninja-build \
+    curl</code></pre>
+
+    <h2>3. Build virglrenderer from Source</h2>
+    <p>To satisfy modern graphics virtualization requirements, build the latest <code>virglrenderer</code> package directly:</p>
+    <pre><code>cd ~/work
+git clone https://gitlab.freedesktop.org/virgl/virglrenderer.git
+cd virglrenderer
+meson setup builddir -Dprefix=/usr/local
+ninja -C builddir
+sudo ninja -C builddir install
+sudo ldconfig</code></pre>
+
+    <h2>4. Build crosvm</h2>
+    <p>Fetch and compile <code>crosvm</code> with support for virtualized graphics rendering:</p>
+    <pre><code>cd ~/work
+git clone https://chromium.googlesource.com/crosvm/crosvm
+cd crosvm
+git submodule update --init
+cargo build --release --features "virgl_renderer"</code></pre>
+
+    <h2>5. Patch vbmeta (Disable AVB Verification)</h2>
+    <p>Bypass Android Verified Boot constraints on target disk images:</p>
+    <pre><code>cd ~/work/aosp/images
+printf '\x00\x00\x00\x03' | dd of=vbmeta.img seek=120 bs=1 count=4 conv=notrunc
+printf '\x00\x00\x00\x03' | dd of=vbmeta_system.img seek=120 bs=1 count=4 conv=notrunc</code></pre>
+
+    <h2>6. Patch Vendor Image (Disable Encryption)</h2>
+    <p>Modify vendor flags to suppress file-based and metadata encryption checks unsupported in light container/VM boundaries:</p>
+    <pre><code>sudo perl -pi -e '
+    s/metadata_encryption/xetadata_encryption/g;
+    s/fileencryption/xileencryption/g;
+    s/wrappedkey/xrappedkey/g;
+    s/keydirectory/xeydirectory/g
+' /tmp/vendor_a.img</code></pre>
+
+    <h2>7. Execution &amp; Boot Command</h2>
+    <p>Launch the virtual machine instance using the compiled binary and configured composite disk layout:</p>
+    <pre><code>sudo ../crosvm/target/release/crosvm run \
+    -m 1024 --cpus 2 --disable-sandbox \
+    --cid 3 \
+    --serial type=stdout,stdin=true \
+    -p "console=ttyAMA0 loglevel=0 androidboot.hardware=cutf_cvm ..." \
+    --block path=composite.img \
+    --initrd merged_ramdisk.img \
+    boot_unpacked/kernel</code></pre>
+
+    <h2>8. ADB Access via vsock</h2>
+    <p>Establish direct debugging connectivity using virtual socket interfaces:</p>
+    <pre><code>adb connect vsock:3
+adb shell</code></pre>
+
+    <h2>9. Display Output via Weston</h2>
+    <p>Configure the DRM compositor runtime backend to render UI frames locally:</p>
+    <pre><code>export XDG_RUNTIME_DIR=/tmp/weston-run
+mkdir -p $XDG_RUNTIME_DIR && chmod 700 $XDG_RUNTIME_DIR
+weston --backend=drm-backend.so --current-mode 2>&1 &</code></pre>
+
+    <h2>10. Troubleshooting Highlights</h2>
+    <ul>
+        <li><strong>vhost_vsock missing:</strong> Compile missing modules using the L4T kernel source tree with <code>CONFIG_LOCALVERSION="-tegra"</code>.</li>
+        <li><strong>SurfaceFlinger SIGABRT:</strong> Force ANGLE backend options (<code>egl=angle</code>) or integrate the <code>gfxstream_backend</code> library.</li>
+        <li><strong>Persistent Disk Conflicts:</strong> Clean and recreate raw GPT persistent disk slices following every automated <code>assemble_cvd</code> pass.</li>
+    </ul>
+
+    <h2>11. Full run_cvd Launch Sequence</h2>
+    <p>For automated orchestration, start the complete Cuttlefish runtime loop:</p>
+    <pre><code>cd ~/work/aosp_imgs
+ulimit -n 65536
+ANDROID_HOST_OUT=$PWD HOME=$PWD nohup ./bin/run_cvd > /tmp/run_cvd_out.log 2>&1 &</code></pre>
 
     <footer>
         &copy; 2026 EdgeStack Systems. All rights reserved.
