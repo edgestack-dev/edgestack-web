@@ -1,0 +1,4 @@
+{
+    "chat.utilityModel": "gemini/models/gemini-3.6-flash",
+    "chat.utilitySmallModel": "gemini/models/gemini-3.5-flash"
+}

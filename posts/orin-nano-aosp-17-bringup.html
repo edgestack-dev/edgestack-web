@@ -38,6 +38,18 @@
         ul { margin-bottom: 16px; padding-left: 20px; color: var(--text-secondary); font-size: 1.05rem; }
         li { margin-bottom: 8px; }
         footer { margin-top: 64px; font-size: 0.85rem; color: #86868b; border-top: 1px solid var(--border-color); padding-top: 24px; text-align: center; }
+        .video-container {
+            margin: 24px 0 36px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background-color: #000000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -164,6 +176,15 @@ weston --backend=drm-backend.so --current-mode 2>&1 &</code></pre>
     <pre><code>cd ~/work/aosp_imgs
 ulimit -n 65536
 ANDROID_HOST_OUT=$PWD HOME=$PWD nohup ./bin/run_cvd > /tmp/run_cvd_out.log 2>&1 &</code></pre>
+
+    <h2>12. Demo Video</h2>
+    <p>Watch a video demonstration of AOSP 17 booting on the NVIDIA Jetson Orin Nano, running Weston with SurfaceFlinger UI rendering over KVM virtualized graphics:</p>
+    <div class="video-container">
+        <video controls preload="metadata">
+            <source src="../assets/orin-nano-aosp17-demo.mp4" type="video/mp4">
+            Your browser does not support the video tag or video format.
+        </video>
+    </div>
 
     <footer>
         &copy; 2026 EdgeStack Systems. All rights reserved.
