@@ -3,68 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EdgeStack Systems | Embedded Architecture & Virtualization</title>
+    <title>EdgeStack Systems | Embedded Architecture & Virtualization Consulting</title>
     <style>
         :root {
-            --bg-color: #fbfbfd;
-            --text-primary: #1d1d1f;
-            --text-secondary: #515154;
-            --accent-color: #0066cc;
+            --bg-color: #f5f5f7;
             --card-bg: #ffffff;
-            --border-color: #d2d2d7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --text-muted: #515154;
+            --accent-color: #0066cc;
+            --accent-light: #f0f5ff;
+            --border-color: #e8e8ed;
+            --border-hover: #d2d2d7;
+            --max-width: 960px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 80px 24px;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            padding-bottom: 80px;
         }
-        header { margin-bottom: 48px; }
-        h1 { font-size: 2.5rem; font-weight: 600; letter-spacing: -0.015em; color: var(--text-primary); margin: 0 0 12px 0; }
-        .subtitle { font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); letter-spacing: -0.005em; line-height: 1.4; }
-        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); margin-bottom: 24px; }
-        h2 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin: 0 0 16px 0; text-transform: uppercase; letter-spacing: 0.05em; }
-        p { margin: 0 0 16px 0; color: var(--text-secondary); font-size: 1.05rem; }
-        p:last-child { margin-bottom: 0; }
-        ul { margin: 0; padding-left: 20px; color: var(--text-secondary); }
-        li { margin-bottom: 10px; font-size: 1.05rem; }
-        a.post-link { color: var(--accent-color); text-decoration: none; font-weight: 500; }
-        a.post-link:hover { text-decoration: underline; }
-        .email-box { display: inline-block; font-family: ui-monospace, monospace; background-color: #f5f5f7; padding: 8px 14px; border-radius: 6px; color: var(--text-primary); font-size: 0.95rem; border: 1px solid #e8e8ed; margin-top: 8px; }
-        footer { margin-top: 64px; font-size: 0.85rem; color: #86868b; text-align: center; }
+        
+        /* Navigation / Header */
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .logo svg {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 60px 24px 80px 24px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 48px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-bottom: 40px;
+                gap: 32px;
+            }
+            .hero-graphic {
+                order: -1;
+            }
+        }
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+        .hero-text .subtitle {
+            font-size: 1.35rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+            margin-bottom: 32px;
+        }
+        .hero-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .badge {
+            background-color: var(--accent-light);
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 100px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .badge-gray {
+            background-color: var(--border-color);
+            color: var(--text-muted);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--text-primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: opacity 0.2s;
+            gap: 8px;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Platform Grid Section */
+        .section-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px 60px 24px;
+        }
+        .section-header {
+            margin-bottom: 32px;
+        }
+        .section-header h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Chips Grid for Platforms */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        @media (max-width: 600px) {
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .platform-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: border-color 0.2s;
+        }
+        .platform-card:hover {
+            border-color: var(--border-hover);
+        }
+        .platform-card .brand {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+        .platform-card .chip-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .platform-card .specs {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Consulting Pillars Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 48px;
+        }
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .service-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .service-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+        }
+        .service-icon {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background-color: var(--accent-light);
+            border-radius: 10px;
+        }
+        .service-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Notes & CTA Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 24px;
+        }
+        @media (max-width: 768px) {
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+        .card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 24px;
+        }
+        .card .meta-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+        
+        a.post-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        a.post-link:hover {
+            text-decoration: underline;
+        }
+
+        .email-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: ui-monospace, SFMono-Regular, SF Pro Text, monospace;
+            background-color: #f5f5f7;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+            width: fit-content;
+        }
+
+        footer {
+            margin-top: 80px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 32px;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>EdgeStack Systems</h1>
-        <p class="subtitle">Specialized embedded systems engineering, low-level Android virtualization, and custom hardware bringup consulting for ARM64 edge platforms.</p>
+    <nav class="nav-container">
+        <a href="index.html" class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+            <span>EdgeStack Systems</span>
+        </a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-text">
+            <div class="hero-badges">
+                <span class="badge">ARM64 Systems</span>
+                <span class="badge badge-gray">Low-Level Virtualization</span>
+            </div>
+            <h1>Embedded Systems &amp; Hypervisor Integration</h1>
+            <p class="subtitle">Specialized engineering consultancy for silicon vendors and device manufacturers. Custom board bringup, real-time hypervisors, and security-hardened AOSP deployments.</p>
+            <a href="mailto:edgestack-dev@proton.me" class="btn">
+                <span>Inquire About Services</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+        <div class="hero-graphic">
+            <!-- Modern System Stack SVG Illustration -->
+            <svg width="100%" height="auto" viewBox="0 0 320 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-height: 280px;">
+                <!-- Guest VM 1 (AOSP) -->
+                <rect x="20" y="20" width="125" height="70" rx="8" fill="#ffffff" stroke="#e8e8ed" stroke-width="2"/>
+                <rect x="32" y="32" width="24" height="6" rx="3" fill="#34c759"/>
+                <text x="32" y="58" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" fill="#1d1d1f">AOSP 17 VM</text>
+                <text x="32" y="72" font-family="-apple-system, sans-serif" font-size="9" fill="#86868b">Cuttlefish / HALs</text>
+
+                <!-- Guest VM 2 (Linux / RTOS) -->
+                <rect x="175" y="20" width="125" height="70" rx="8" fill="#ffffff" stroke="#e8e8ed" stroke-width="2"/>
+                <rect x="187" y="32" width="24" height="6" rx="3" fill="#0066cc"/>
+                <text x="187" y="58" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" fill="#1d1d1f">Linux Target</text>
+                <text x="187" y="72" font-family="-apple-system, sans-serif" font-size="9" fill="#86868b">Debian / RTOS</text>
+
+                <!-- Hypervisor Layer -->
+                <rect x="20" y="110" width="280" height="60" rx="8" fill="#0066cc" fill-opacity="0.05" stroke="#0066cc" stroke-width="2"/>
+                <text x="36" y="135" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" fill="#0066cc">Hypervisor &amp; VirtIO Layer</text>
+                <text x="36" y="152" font-family="-apple-system, sans-serif" font-size="10" fill="#0066cc" fill-opacity="0.8">crosvm / KVM virtualized devices (virtio-gpu, vsock)</text>
+
+                <!-- Hardware Abstraction Layer / Host OS -->
+                <rect x="20" y="190" width="280" height="70" rx="8" fill="#1d1d1f" stroke="#1d1d1f" stroke-width="2"/>
+                <text x="36" y="218" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" fill="#ffffff">ARM64 Silicon Base (BSP / Host)</text>
+                <text x="36" y="235" font-family="-apple-system, sans-serif" font-size="10" fill="#86868b">NVIDIA Tegra / Qualcomm Snapdragon / Renesas R-Car</text>
+                <circle cx="264" cy="225" r="8" fill="#34c759"/>
+                <circle cx="264" cy="225" r="4" fill="#ffffff"/>
+            </svg>
+        </div>
     </header>
 
-    <div class="card">
-        <h2>Core Capabilities</h2>
-        <ul>
-            <li>Full Board Support Package (BSP) custom kernel bringup.</li>
-            <li>AOSP architecture, customization, and hardware abstraction layer (HAL) development.</li>
-            <li>Low-level virtualization, hypervisor configuration, and secure container runtimes on ARM64.</li>
-        </ul>
-    </div>
+    <main>
+        <!-- Supported Silicon Platforms -->
+        <section class="section-container">
+            <div class="section-header">
+                <h2>Target Silicon Expertise</h2>
+                <p>Deep engineering experience delivering reference designs and production BSPs on leading ARM64 hardware platforms.</p>
+            </div>
+            
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <span class="brand" style="color: #76b900;">NVIDIA</span>
+                    <span class="chip-name">Jetson Tegra</span>
+                    <span class="specs">Orin Nano, Orin NX, AGX Orin systems. L4T, Linux-tegra, GPU virtualization via KVM &amp; virglrenderer.</span>
+                </div>
+                <div class="platform-card">
+                    <span class="brand" style="color: #3253dc;">Qualcomm</span>
+                    <span class="chip-name">Snapdragon IoT</span>
+                    <span class="specs">SA8x / QRB5165 series. Custom Android HAL bringup, secure virtualization platforms, bootloader customization.</span>
+                </div>
+                <div class="platform-card">
+                    <span class="brand" style="color: #003399;">Renesas</span>
+                    <span class="chip-name">R-Car Platforms</span>
+                    <span class="specs">Automotive &amp; industrial SoC integration. Real-time virtualization (ACRN, KVM) and dual-OS partitioning.</span>
+                </div>
+            </div>
+        </section>
 
-    <div class="card">
-        <h2>Engineering Notes &amp; Publications</h2>
-        <p><a href="posts/orin-nano-aosp-17-bringup.html" class="post-link">Bringing Up AOSP 17 on NVIDIA Jetson Orin Nano &rarr;</a></p>
-        <p style="font-size: 0.95rem; color: #86868b; margin-top: 8px;">More deep-dives on virtualization and system architecture coming soon.</p>
-    </div>
+        <!-- Consulting Services Pillars -->
+        <section class="section-container">
+            <div class="section-header">
+                <h2>Our Engineering Focus</h2>
+                <p>We work directly with your HW and SW engineering teams to solve complex low-level implementation bottlenecks.</p>
+            </div>
 
-    <div class="card">
-        <h2>Inquiries</h2>
-        <p>For technical evaluations, architecture design reviews, or custom integration contracts, reach out directly:</p>
-        <div class="email-box">edgestack-dev [at] proton.me</div>
-    </div>
+            <div class="services-grid">
+                <!-- Pillar 1: Board Bringup -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                            <line x1="6" y1="6" x2="18" y2="6"></line>
+                            <line x1="6" y1="12" x2="18" y2="12"></line>
+                            <line x1="6" y1="18" x2="12" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3>Board Bringup &amp; BSP</h3>
+                    <p>Writing device trees (DTS), patch management for Linux kernels, configuration of boot stages (U-Boot, UEFI), and writing low-level platform peripheral drivers.</p>
+                </div>
+
+                <!-- Pillar 2: Virtualization -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+                            <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+                            <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+                            <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+                        </svg>
+                    </div>
+                    <h3>Virtualization &amp; Hypervisors</h3>
+                    <p>Setting up KVM, configuring crosvm virtual machines, deploying GPU acceleration overlays (virglrenderer/gfxstream), virtio interfaces, and secure isolations.</p>
+                </div>
+
+                <!-- Pillar 3: AOSP Customization -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3>AOSP Customization</h3>
+                    <p>Porting new Android versions to custom boards, custom HAL development (sensor, vehicle, camera), stripping standard services, and building security-hardened baselines.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications & Inquiries Grid -->
+        <section class="section-container">
+            <div class="bottom-grid">
+                <!-- engineering notes -->
+                <div class="card">
+                    <div>
+                        <h3>Engineering Case Studies</h3>
+                        <p>We publish our architectural patterns and delta guides as part of our commitment to the open-source systems engineering community.</p>
+                    </div>
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px;">
+                        <a href="posts/orin-nano-aosp-17-bringup.html" class="post-link">
+                            <strong>Bringing Up AOSP 17 on NVIDIA Orin Nano &rarr;</strong>
+                        </a>
+                        <div class="meta-info">Comprehensive virtualized bringup using crosvm/KVM &bull; Aug 2026</div>
+                    </div>
+                </div>
+
+                <!-- inquiries -->
+                <div class="card">
+                    <div>
+                        <h3>Consulting Inquiries</h3>
+                        <p>Have an upcoming hardware cycle or low-level platform architecture challenge? Contact us to schedule a direct session with our lead engineers.</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.95rem; margin-bottom: 10px; font-weight: 500;">Secure Direct Email:</p>
+                        <div class="email-box">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color);">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span>edgestack-dev [at] proton.me</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
         &copy; 2026 EdgeStack Systems. All rights reserved.
