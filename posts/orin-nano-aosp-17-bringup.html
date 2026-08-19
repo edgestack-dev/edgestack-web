@@ -173,8 +173,7 @@ weston --backend=drm-backend.so --current-mode 2>&1 &</code></pre>
 
     <h2>11. Full run_cvd Launch Sequence</h2>
     <p>For automated orchestration, start the complete Cuttlefish runtime loop:</p>
-    <pre><code>cd ~/work/aosp_imgs
-ulimit -n 65536
+    <pre><code>ulimit -n 65536
 ANDROID_HOST_OUT=$PWD HOME=$PWD nohup ./bin/run_cvd > /tmp/run_cvd_out.log 2>&1 &</code></pre>
 
     <h2>12. Demo Video</h2>
